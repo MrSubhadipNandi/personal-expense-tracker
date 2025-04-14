@@ -34,7 +34,7 @@ A desktop application built with Python and Tkinter to help you manage and track
 
 ## 📂 Project Structure
 
-
+```
 personal-expense-tracker/
 │
 ├── .gitignore
@@ -76,3 +76,4 @@ personal-expense-tracker/
 │   └── test_ui_basic.py
 
 
+```
