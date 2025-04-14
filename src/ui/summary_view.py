@@ -8,7 +8,7 @@ import matplotlib.pyplot as plt
 class SummaryView(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.pack(fill="both", expand=True, padx=20, pady=20)
+        # self.pack(fill="both", expand=True, padx=20, pady=20)
 
         ttk.Label(self, text="Expense Summary", font=("Arial", 16)).pack(pady=10)
 

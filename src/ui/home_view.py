@@ -6,7 +6,7 @@ from tkinter import ttk, messagebox
 class HomeView(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-        self.pack(fill="both", expand=True, padx=20, pady=20)
+        # self.pack(fill="both", expand=True, padx=20, pady=20)
 
         # --- Heading ---
         ttk.Label(self, text="Expense List", font=("Arial", 16)).pack(pady=10)
