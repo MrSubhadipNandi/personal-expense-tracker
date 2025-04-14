@@ -3,6 +3,7 @@
 import tkinter as tk
 from tkinter import ttk
 from ui.home_view import HomeView
+from ui.add_expense_view import AddExpenseView
 
 # --- App Configurations ---
 APP_TITLE = "Personal Expense Tracker"
@@ -21,6 +22,7 @@ def main():
     # Load the HomeView into the window
     view = HomeView(root)
     view.pack(fill='both', expand=True)
+    view = AddExpenseView(root)
 
     # Start the Tkinter event loop
     root.mainloop()
