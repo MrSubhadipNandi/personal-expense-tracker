@@ -34,8 +34,21 @@ def get_all_expenses():
         cursor.execute('SELECT * FROM expenses ORDER BY date DESC')
         return cursor.fetchall()
 
+
+def update_expense(expense_id, date, category, amount, description):
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE expenses
+        SET date = ?, category = ?, amount = ?, description = ?
+        WHERE id = ?
+    """, (date, category, amount, description, expense_id))
+    conn.commit()
+    conn.close()
+
 def delete_expense(expense_id):
-    with sqlite3.connect(DB_FILE) as conn:
-        cursor = conn.cursor()
-        cursor.execute('DELETE FROM expenses WHERE id = ?', (expense_id,))
-        conn.commit()
+    conn = sqlite3.connect(DB_FILE)
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM expenses WHERE id = ?", (expense_id,))
+    conn.commit()
+    conn.close()
