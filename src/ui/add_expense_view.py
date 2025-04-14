@@ -2,6 +2,7 @@
 
 import tkinter as tk
 from tkinter import ttk, messagebox
+from db.db_handler import insert_expense
 from datetime import datetime
 
 class AddExpenseView(ttk.Frame):
@@ -9,63 +10,56 @@ class AddExpenseView(ttk.Frame):
         super().__init__(parent)
         self.pack(fill="both", expand=True, padx=20, pady=20)
 
+        ttk.Label(self, text="Add New Expense", font=("Arial", 16)).pack(pady=10)
+
+        form = ttk.Frame(self)
+        form.pack(pady=10)
+
         # --- Form Fields ---
-        # Date
-        ttk.Label(self, text="Date:").grid(row=0, column=0, sticky="w", pady=5)
-        self.date_var = tk.StringVar(value=datetime.now().strftime("%Y-%m-%d"))
-        self.date_entry = ttk.Entry(self, textvariable=self.date_var, width=30)
-        self.date_entry.grid(row=0, column=1, pady=5)
+        ttk.Label(form, text="Date (YYYY-MM-DD):").grid(row=0, column=0, sticky="e")
+        self.date_entry = ttk.Entry(form)
+        self.date_entry.grid(row=0, column=1, padx=5, pady=5)
+        self.date_entry.insert(0, datetime.today().strftime("%Y-%m-%d"))
 
-        # Category
-        ttk.Label(self, text="Category:").grid(row=1, column=0, sticky="w", pady=5)
-        self.category_var = tk.StringVar()
-        self.category_dropdown = ttk.Combobox(
-            self, textvariable=self.category_var, state="readonly",
-            values=["Food", "Transport", "Shopping", "Utilities", "Entertainment", "Other"]
-        )
-        self.category_dropdown.grid(row=1, column=1, pady=5)
-        self.category_dropdown.set("Select Category")
+        ttk.Label(form, text="Category:").grid(row=1, column=0, sticky="e")
+        self.category_entry = ttk.Entry(form)
+        self.category_entry.grid(row=1, column=1, padx=5, pady=5)
 
-        # Amount
-        ttk.Label(self, text="Amount (₹):").grid(row=2, column=0, sticky="w", pady=5)
-        self.amount_var = tk.StringVar()
-        self.amount_entry = ttk.Entry(self, textvariable=self.amount_var, width=30)
-        self.amount_entry.grid(row=2, column=1, pady=5)
+        ttk.Label(form, text="Amount:").grid(row=2, column=0, sticky="e")
+        self.amount_entry = ttk.Entry(form)
+        self.amount_entry.grid(row=2, column=1, padx=5, pady=5)
 
-        # Description
-        ttk.Label(self, text="Description:").grid(row=3, column=0, sticky="w", pady=5)
-        self.description_var = tk.StringVar()
-        self.description_entry = ttk.Entry(self, textvariable=self.description_var, width=30)
-        self.description_entry.grid(row=3, column=1, pady=5)
+        ttk.Label(form, text="Description:").grid(row=3, column=0, sticky="e")
+        self.description_entry = ttk.Entry(form)
+        self.description_entry.grid(row=3, column=1, padx=5, pady=5)
 
-        # Submit Button
-        self.submit_btn = ttk.Button(self, text="Add Expense", command=self.add_expense)
-        self.submit_btn.grid(row=4, column=0, columnspan=2, pady=15)
+        # --- Save Button ---
+        ttk.Button(self, text="Save Expense", command=self.save_expense).pack(pady=15)
 
-        # Configure grid spacing
-        self.columnconfigure(0, weight=1)
-        self.columnconfigure(1, weight=2)
-
-    def add_expense(self):
-        # Simple validation
-        date = self.date_var.get()
-        category = self.category_var.get()
-        amount = self.amount_var.get()
-        description = self.description_var.get()
-
-        if category == "Select Category" or not amount:
-            messagebox.showerror("Input Error", "Please enter category and amount.")
-            return
+    def save_expense(self):
+        date = self.date_entry.get().strip()
+        category = self.category_entry.get().strip()
+        amount = self.amount_entry.get().strip()
+        description = self.description_entry.get().strip()
 
         try:
             amount = float(amount)
         except ValueError:
-            messagebox.showerror("Input Error", "Amount must be a number.")
+            messagebox.showerror("Invalid Input", "Amount must be a number.")
             return
 
-        # Just print for now (DB comes in later)
-        print("Date:", date)
-        print("Category:", category)
-        print("Amount:", amount)
-        print("Description:", description)
-        messagebox.showinfo("Success", "Expense added (not saved yet!)")
+        if not (date and category and amount):
+            messagebox.showerror("Missing Data", "Please fill all required fields.")
+            return
+
+        insert_expense(date, category, amount, description)
+        messagebox.showinfo("Saved", "Expense added successfully!")
+
+        self.clear_form()
+
+    def clear_form(self):
+        self.date_entry.delete(0, tk.END)
+        self.date_entry.insert(0, datetime.today().strftime("%Y-%m-%d"))
+        self.category_entry.delete(0, tk.END)
+        self.amount_entry.delete(0, tk.END)
+        self.description_entry.delete(0, tk.END)
