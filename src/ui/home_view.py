@@ -7,7 +7,7 @@ from db.db_handler import get_all_expenses, update_expense, delete_expense
 class HomeView(ttk.Frame):
     def __init__(self, parent):
         super().__init__(parent)
-
+        
         ttk.Label(self, text="Expense History", font=("Arial", 16)).pack(pady=10)
 
         columns = ("id", "date", "category", "amount", "description")
@@ -18,6 +18,12 @@ class HomeView(ttk.Frame):
             self.tree.column(col, anchor="center")
 
         self.tree.pack(fill="both", expand=True, pady=5)
+
+
+        # Scrollbar
+        scrollbar = ttk.Scrollbar(self, orient="vertical", command=self.tree.yview)
+        self.tree.configure(yscroll=scrollbar.set)
+        scrollbar.pack(side="right", fill="y")
 
         # Buttons
         btn_frame = ttk.Frame(self)

@@ -11,10 +11,12 @@ class App(tk.Tk):
     def __init__(self):
         super().__init__()
 
+        # Set window properties and icon
+        self.iconbitmap("assets/icon.ico")
         self.title("Personal Expense Tracker")
         self.geometry("800x600")
         self.resizable()
-
+        
         # --- Navigation Bar ---
         nav_frame = ttk.Frame(self)
         nav_frame.pack(side="top", fill="x")
@@ -25,7 +27,7 @@ class App(tk.Tk):
 
         # --- View Container ---
         self.container = ttk.Frame(self)
-        self.container.pack(fill="both", expand=True)
+        self.container.pack(fill="both", expand=True, padx=20, pady=20)
 
         self.frames = {}
 
